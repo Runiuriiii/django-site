@@ -2,7 +2,7 @@
      <html lang="ru">
      <head>
          <meta charset="UTF-8">
-         <title>Система учёта успеваемости</title>
+         <title>Предметы</title>
          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
      </head>
      <body class="bg-green-50 font-sans">
@@ -19,18 +19,18 @@
              </div>
          </nav>
          <div class="container mx-auto p-6">
-             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Список студентов</h2>
-             {% if students %}
+             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Список предметов</h2>
+             {% if subjects %}
                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     {% for student in students %}
+                     {% for subject in subjects %}
                          <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition">
-                             <h3 class="text-lg font-medium text-gray-800">{{ student.first_name }} {{ student.last_name }}</h3>
-                             <p class="text-gray-600">ID: {{ student.student_id }}</p>
+                             <h3 class="text-lg font-medium text-gray-800">{{ subject.name }}</h3>
+                             <p class="text-gray-600">Код: {{ subject.code }}</p>
                          </div>
                      {% endfor %}
                  </div>
              {% else %}
-                 <p class="text-gray-600">Нет студентов</p>
+                 <p class="text-gray-600">Нет предметов</p>
              {% endif %}
          </div>
      </body>
