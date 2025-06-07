@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+     <html lang="ru">
+     <head>
+         <meta charset="UTF-8">
+         <title>Система учёта успеваемости</title>
+     </head>
+     <body>
+         <h1>Список студентов</h1>
+         <ul>
+             {% for student in students %}
+                 <li>{{ student.first_name }} {{ student.last_name }} (ID: {{ student.student_id }})</li>
+             {% empty %}
+                 <li>Нет студентов</li>
+             {% endfor %}
+         </ul>
+         <a href="{% url 'admin:index' %}">Перейти в админ-панель</a>
+     </body>
+     </html>

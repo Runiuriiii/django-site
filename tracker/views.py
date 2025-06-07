@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Student
 
 def index(request):
-    return HttpResponse("Добро пожаловать в систему учёта успеваемости студентов!")
+    students = Student.objects.all()
+    return render(request, 'tracker/index.html', {'students': students})
