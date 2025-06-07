@@ -3,16 +3,32 @@
      <head>
          <meta charset="UTF-8">
          <title>Система учёта успеваемости</title>
+         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
      </head>
-     <body>
-         <h1>Список студентов</h1>
-         <ul>
-             {% for student in students %}
-                 <li>{{ student.first_name }} {{ student.last_name }} (ID: {{ student.student_id }})</li>
-             {% empty %}
-                 <li>Нет студентов</li>
-             {% endfor %}
-         </ul>
-         <a href="{% url 'admin:index' %}">Перейти в админ-панель</a>
+     <body class="bg-gray-100 font-sans">
+         <nav class="bg-blue-600 p-4 text-white">
+             <div class="container mx-auto flex justify-between">
+                 <h1 class="text-xl font-bold">Система учёта успеваемости</h1>
+                 <div>
+                     <a href="{% url 'tracker:index' %}" class="px-2">Студенты</a>
+                     <a href="{% url 'admin:index' %}" class="px-2">Админ-панель</a>
+                 </div>
+             </div>
+         </nav>
+         <div class="container mx-auto p-6">
+             <h2 class="text-2xl font-semibold mb-4">Список студентов</h2>
+             {% if students %}
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {% for student in students %}
+                         <div class="bg-white p-4 rounded-lg shadow">
+                             <h3 class="text-lg font-medium">{{ student.first_name }} {{ student.last_name }}</h3>
+                             <p class="text-gray-600">ID: {{ student.student_id }}</p>
+                         </div>
+                     {% endfor %}
+                 </div>
+             {% else %}
+                 <p class="text-gray-500">Нет студентов</p>
+             {% endif %}
+         </div>
      </body>
      </html>
