@@ -1,51 +1,34 @@
-<!DOCTYPE html>
-     <html lang="ru">
-     <head>
-         <meta charset="UTF-8">
-         <title>Оценки</title>
-         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-     </head>
-     <body class="bg-green-50 font-sans">
-         <nav class="bg-white p-4 shadow-md">
-             <div class="container mx-auto flex justify-between items-center">
-                 <h1 class="text-2xl font-bold text-gray-800">Система учёта</h1>
-                 <div class="space-x-4">
-                     <a href="{% url 'tracker:index' %}" class="text-gray-700 hover:text-green-600">Студенты</a>
-                     <a href="{% url 'tracker:subject_list' %}" class="text-gray-700 hover:text-green-600">Предметы</a>
-                     <a href="{% url 'tracker:grade_list' %}" class="text-gray-700 hover:text-green-600">Оценки</a>
-                     <a href="{% url 'tracker:report' %}" class="text-gray-700 hover:text-green-600">Отчёт</a>
-                     <a href="{% url 'admin:index' %}" class="text-gray-700 hover:text-green-600">Админ</a>
-                 </div>
-             </div>
-         </nav>
-         <div class="container mx-auto p-6">
-             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Список оценок</h2>
-             {% if grades %}
-                 <div class="bg-white rounded-lg shadow-md p-4">
-                     <table class="w-full table-auto">
-                         <thead>
-                             <tr class="bg-gray-100">
-                                 <th class="px-4 py-2 text-gray-800">Студент</th>
-                                 <th class="px-4 py-2 text-gray-800">Предмет</th>
-                                 <th class="px-4 py-2 text-gray-800">Оценка</th>
-                                 <th class="px-4 py-2 text-gray-800">Дата</th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             {% for grade in grades %}
-                                 <tr class="border-t">
-                                     <td class="px-4 py-2 text-gray-700">{{ grade.student }}</td>
-                                     <td class="px-4 py-2 text-gray-700">{{ grade.subject }}</td>
-                                     <td class="px-4 py-2 text-gray-700">{{ grade.score }}</td>
-                                     <td class="px-4 py-2 text-gray-700">{{ grade.date }}</td>
-                                 </tr>
-                             {% endfor %}
-                         </tbody>
-                     </table>
-                 </div>
-             {% else %}
-                 <p class="text-gray-600">Нет оценок</p>
-             {% endif %}
+{% extends 'tracker/base.html' %}
+     {% block title %}Список оценок{% endblock %}
+     {% block content %}
+         <div class="flex justify-between items-center mb-6">
+             <h2 class="text-2xl font-semibold text-gray-800">Список оценок</h2>
+             <a href="{% url 'tracker:grade_create' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Добавить оценку</a>
          </div>
-     </body>
-     </html>
+         {% if grades %}
+             <div class="bg-white rounded-lg shadow-md p-4">
+                 <table class="w-full table-auto">
+                     <thead>
+                         <tr class="bg-gray-100">
+                             <th class="px-4 py-2 text-gray-800">Студент</th>
+                             <th class="px-4 py-2 text-gray-800">Предмет</th>
+                             <th class="px-4 py-2 text-gray-800">Оценка</th>
+                             <th class="px-4 py-2 text-gray-800">Дата</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for grade in grades %}
+                             <tr class="border-t">
+                                 <td class="px-4 py-2 text-gray-700">{{ grade.student }}</td>
+                                 <td class="px-4 py-2 text-gray-700">{{ grade.subject }}</td>
+                                 <td class="px-4 py-2 text-gray-700">{{ grade.score }}</td>
+                                 <td class="px-4 py-2 text-gray-700">{{ grade.date }}</td>
+                             </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+             </div>
+         {% else %}
+             <p class="text-gray-600">Нет оценок</p>
+         {% endif %}
+     {% endblock %}

@@ -8,4 +8,6 @@ urlpatterns = [
     path('subjects/', views.subject_list, name='subject_list'),
     path('grades/', views.grade_list, name='grade_list'),
     path('report/', views.report, name='report'),
+    path('students/create/', views.student_create, name='student_create'),
+    path('grades/create/', views.grade_create, name='grade_create'),
     ]

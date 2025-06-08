@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+     <html lang="ru">
+     <head>
+         <meta charset="UTF-8">
+         <title>{% block title %}Система учёта{% endblock %}</title>
+         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+     </head>
+     <body class="bg-green-50 font-sans">
+         <nav class="bg-white p-4 shadow-md">
+             <div class="container mx-auto flex justify-between items-center">
+                 <h1 class="text-2xl font-bold text-gray-800">Система учёта</h1>
+                 <div class="space-x-4">
+                     <a href="{% url 'tracker:index' %}" class="text-gray-700 hover:text-green-600">Студенты</a>
+                     <a href="{% url 'tracker:student_create' %}" class="text-gray-700 hover:text-green-600">Добавить студента</a>
+                     <a href="{% url 'tracker:subject_list' %}" class="text-gray-700 hover:text-green-600">Предметы</a>
+                     <a href="{% url 'tracker:grade_list' %}" class="text-gray-700 hover:text-green-600">Оценки</a>
+                     <a href="{% url 'tracker:grade_create' %}" class="text-gray-700 hover:text-green-600">Добавить оценку</a>
+                     <a href="{% url 'tracker:report' %}" class="text-gray-700 hover:text-green-600">Отчёт</a>
+                     <a href="{% url 'admin:index' %}" class="text-gray-700 hover:text-green-600">Админ</a>
+                 </div>
+             </div>
+         </nav>
+         <div class="container mx-auto p-6">
+             {% block content %}
+             {% endblock %}
+         </div>
+     </body>
+     </html>
