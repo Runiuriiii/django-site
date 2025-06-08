@@ -15,6 +15,7 @@ def grade_list(request):
     grades = Grade.objects.all()
     return render(request, 'tracker/grade_list.html', {'grades': grades})
 
+
 def report(request):
     students = Student.objects.all()
     subjects = Subject.objects.all()
@@ -32,14 +33,14 @@ def report(request):
             'subject': subject,
             'avg_score': round(Grade.objects.filter(subject=subject).aggregate(Avg('score'))['score__avg'] or 0, 2)
         }
-    for subject in subjects
-         ]
+        for subject in subjects
+    ]
     return render(request, 'tracker/report.html', {
         'report_data': sorted(report_data, key=lambda x: x['avg_score'], reverse=True),
         'best_student': best_student,
         'worst_student': worst_student,
         'subject_avgs': subject_avgs,
-         })
+    })
 
 def student_create(request):
     if request.method == 'POST':

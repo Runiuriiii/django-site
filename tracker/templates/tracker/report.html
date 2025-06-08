@@ -1,85 +1,108 @@
-<!DOCTYPE html>
-     <html lang="ru">
-     <head>
-         <meta charset="UTF-8">
-         <title>Отчёт об успеваемости</title>
-         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-     </head>
-     <body class="bg-green-50 font-sans">
-         <nav class="bg-white p-4 shadow-md">
-             <div class="container mx-auto flex justify-between items-center">
-                 <h1 class="text-2xl font-bold text-gray-800">Система учёта</h1>
-                 <div class="space-x-4">
-                     <a href="{% url 'tracker:index' %}" class="text-gray-700 hover:text-green-600">Студенты</a>
-                     <a href="{% url 'tracker:subject_list' %}" class="text-gray-700 hover:text-green-600">Предметы</a>
-                     <a href="{% url 'tracker:grade_list' %}" class="text-gray-700 hover:text-green-600">Оценки</a>
-                     <a href="{% url 'tracker:report' %}" class="text-gray-700 hover:text-green-600">Отчёт</a>
-                     <a href="{% url 'admin:index' %}" class="text-gray-700 hover:text-green-600">Админ</a>
+{% extends 'tracker/base.html' %}
+     {% block title %}Отчёт об успеваемости{% endblock %}
+     {% block content %}
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Отчёт об успеваемости</h2>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+             {% if best_student %}
+                 <div class="bg-white p-4 rounded-lg shadow-md">
+                     <h3 class="text-lg font-medium text-gray-800">Лучший студент</h3>
+                     <p class="text-gray-700">{{ best_student.student }}: {{ best_student.avg_score }}</p>
                  </div>
-             </div>
-         </nav>
-         <div class="container mx-auto p-6">
-             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Отчёт об успеваемости</h2>
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                 {% if best_student %}
-                     <div class="bg-white p-4 rounded-lg shadow-md">
-                         <h3 class="text-lg font-medium text-gray-800">Лучший студент</h3>
-                         <p class="text-gray-700">{{ best_student.student }}: {{ best_student.avg_score }}</p>
-                     </div>
-                 {% endif %}
-                 {% if worst_student %}
-                     <div class="bg-white p-4 rounded-lg shadow-md">
-                         <h3 class="text-lg font-medium text-gray-800">Худший студент</h3>
-                         <p class="text-gray-700">{{ worst_student.student }}: {{ worst_student.avg_score }}</p>
-                     </div>
-                 {% endif %}
-             </div>
-             <h3 class="text-xl font-semibold text-gray-800 mb-4">Средние баллы по студентам</h3>
-             {% if report_data %}
-                 <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-                     <table class="w-full table-auto">
-                         <thead>
-                             <tr class="bg-gray-100">
-                                 <th class="px-4 py-2 text-gray-800">Студент</th>
-                                 <th class="px-4 py-2 text-gray-800">Средняя оценка</th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             {% for item in report_data %}
-                                 <tr class="border-t">
-                                     <td class="px-4 py-2 text-gray-700">{{ item.student }}</td>
-                                     <td class="px-4 py-2 text-gray-700">{{ item.avg_score }}</td>
-                                 </tr>
-                             {% endfor %}
-                         </tbody>
-                     </table>
-                 </div>
-             {% else %}
-                 <p class="text-gray-600">Нет данных для студентов</p>
              {% endif %}
-             <h3 class="text-xl font-semibold text-gray-800 mb-4">Средние баллы по дисциплинам</h3>
-             {% if subject_avgs %}
-                 <div class="bg-white rounded-lg shadow-md p-4">
-                     <table class="w-full table-auto">
-                         <thead>
-                             <tr class="bg-gray-100">
-                                 <th class="px-4 py-2 text-gray-800">Предмет</th>
-                                 <th class="px-4 py-2 text-gray-800">Средняя оценка</th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             {% for item in subject_avgs %}
-                                 <tr class="border-t">
-                                     <td class="px-4 py-2 text-gray-700">{{ item.subject }}</td>
-                                     <td class="px-4 py-2 text-gray-700">{{ item.avg_score }}</td>
-                                 </tr>
-                             {% endfor %}
-                         </tbody>
-                     </table>
+             {% if worst_student %}
+                 <div class="bg-white p-4 rounded-lg shadow-md">
+                     <h3 class="text-lg font-medium text-gray-800">Худший студент</h3>
+                     <p class="text-gray-700">{{ worst_student.student }}: {{ worst_student.avg_score }}</p>
                  </div>
-             {% else %}
-                 <p class="text-gray-600">Нет данных для дисциплин</p>
              {% endif %}
          </div>
-     </body>
-     </html>
+         <h3 class="text-xl font-semibold text-gray-800 mb-4">Средние баллы по студентам</h3>
+         {% if report_data %}
+             <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                 <canvas id="studentChart" class="mb-4"></canvas>
+                 <table class="w-full table-auto">
+                     <thead>
+                         <tr class="bg-gray-100">
+                             <th class="px-4 py-2 text-gray-800">Студент</th>
+                             <th class="px-4 py-2 text-gray-800">Средняя оценка</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for item in report_data %}
+                             <tr class="border-t">
+                                 <td class="px-4 py-2 text-gray-700">{{ item.student }}</td>
+                                 <td class="px-4 py-2 text-gray-700">{{ item.avg_score }}</td>
+                             </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+             </div>
+         {% else %}
+             <p class="text-gray-600">Нет данных для студентов</p>
+         {% endif %}
+         <h3 class="text-xl font-semibold text-gray-800 mb-4">Средние баллы по дисциплинам</h3>
+         {% if subject_avgs %}
+             <div class="bg-white rounded-lg shadow-md p-4">
+                 <canvas id="subjectChart" class="mb-4"></canvas>
+                 <table class="w-full table-auto">
+                     <thead>
+                         <tr class="bg-gray-100">
+                             <th class="px-4 py-2 text-gray-800">Предмет</th>
+                             <th class="px-4 py-2 text-gray-800">Средняя оценка</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for item in subject_avgs %}
+                             <tr class="border-t">
+                                 <td class="px-4 py-2 text-gray-700">{{ item.subject }}</td>
+                                 <td class="px-4 py-2 text-gray-700">{{ item.avg_score }}</td>
+                             </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+             </div>
+         {% else %}
+             <p class="text-gray-600">Нет данных для дисциплин</p>
+         {% endif %}
+         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+         <script>
+             // График для студентов
+             new Chart(document.getElementById('studentChart'), {
+                 type: 'bar',
+                 data: {
+                     labels: [{% for item in report_data %}'{{ item.student }}',{% endfor %}],
+                     datasets: [{
+                         label: 'Средняя оценка',
+                         data: [{% for item in report_data %}{{ item.avg_score }},{% endfor %}],
+                         backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                         borderColor: 'rgba(34, 197, 94, 1)',
+                         borderWidth: 1
+                     }]
+                 },
+                 options: {
+                     scales: {
+                         y: { beginAtZero: true, max: 100 }
+                     }
+                 }
+             });
+             // График для дисциплин
+             new Chart(document.getElementById('subjectChart'), {
+                 type: 'bar',
+                 data: {
+                     labels: [{% for item in subject_avgs %}'{{ item.subject }}',{% endfor %}],
+                     datasets: [{
+                         label: 'Средняя оценка',
+                         data: [{% for item in subject_avgs %}{{ item.avg_score }},{% endfor %}],
+                         backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                         borderColor: 'rgba(34, 197, 94, 1)',
+                         borderWidth: 1
+                     }]
+                 },
+                 options: {
+                     scales: {
+                         y: { beginAtZero: true, max: 100 }
+                     }
+                 }
+             });
+         </script>
+     {% endblock %}
