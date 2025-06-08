@@ -1,14 +1,22 @@
 {% extends 'tracker/base.html' %}
-     {% block title %}Добавить оценку{% endblock %}
+     {% block title %}{% if form.instance.pk %}Редактировать оценку{% else %}Добавить оценку{% endif %}{% endblock %}
      {% block content %}
-         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Добавить оценку</h2>
-         <div class="bg-white p-6 rounded-lg shadow-md">
-             <form method="post" action="{% url 'tracker:grade_create' %}">
+         <h2 class="text-2xl font-semibold text-gray-800 mb-6">{% if form.instance.pk %}Редактировать оценку{% else %}Добавить оценку{% endif %}</h2>
+         <div class="bg-white p-6 rounded-lg shadow-md card">
+             <form method="post" action="{% if form.instance.pk %}{% url 'tracker:grade_edit' form.instance.pk %}{% else %}{% url 'tracker:grade_create' %}{% endif %}">
                  {% csrf_token %}
                  <div class="grid grid-cols-1 gap-4">
-                     {{ form.as_p }}
+                     {% for field in form %}
+                         <div>
+                             <label class="block text-gray-700 mb-1">{{ field.label }}</label>
+                             {{ field }}
+                         </div>
+                     {% endfor %}
                  </div>
-                 <button type="submit" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Сохранить</button>
+                 <div class="mt-6 flex space-x-4">
+                     <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition duration-200">Сохранить</button>
+                     <a href="{% url 'tracker:grade_list' %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300 transition duration-200">Отмена</a>
+                 </div>
              </form>
          </div>
      {% endblock %}

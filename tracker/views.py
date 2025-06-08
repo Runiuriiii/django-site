@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student, Subject, Grade
 from .forms import StudentForm, GradeForm
 from django.db.models import Avg
@@ -51,6 +51,25 @@ def student_create(request):
     else:
         form = StudentForm()
     return render(request, 'tracker/student_form.html', {'form': form})
+
+def student_edit(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('tracker:index')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'tracker/student_form.html', {'form': form})
+
+
+def student_delete(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('tracker:index')
+    return render(request, 'tracker/student_delete.html', {'student': student})
 def grade_create(request):
     if request.method == 'POST':
         form = GradeForm(request.POST)
@@ -60,3 +79,21 @@ def grade_create(request):
     else:
         form = GradeForm()
     return render(request, 'tracker/grade_form.html', {'form': form})
+
+def grade_edit(request, pk):
+         grade = get_object_or_404(Grade, pk=pk)
+         if request.method == 'POST':
+             form = GradeForm(request.POST, instance=grade)
+             if form.is_valid():
+                 form.save()
+                 return redirect('tracker:grade_list')
+         else:
+             form = GradeForm(instance=grade)
+         return render(request, 'tracker/grade_form.html', {'form': form})
+
+def grade_delete(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+    if request.method == 'POST':
+        grade.delete()
+        return redirect('tracker:grade_list')
+    return render(request, 'tracker/grade_delete.html', {'grade': grade})
